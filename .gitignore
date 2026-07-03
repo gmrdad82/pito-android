@@ -1,0 +1,21 @@
+# Gradle build state and outputs
+.gradle/
+build/
+.kotlin/
+
+# Machine-specific SDK location (sdk.dir) — never committed
+local.properties
+
+# Signing keystores — the release key must NEVER enter git history
+*.jks
+*.keystore
+
+# Agent working docs (plans/specs/briefs) — local only
+/docs/claude/
+
+# Scratch
+/tmp/
+
+# Editor
+.idea/
+.vscode/
