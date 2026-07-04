@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- main_root takes the status-bar height as top padding (set in
-     MainActivity): the web app can't see Android's status bar inset, so
-     without it the terminal collides with the clock. The strip stays black —
-     invisible against the terminal. IME insets are handled on the nav host. -->
+<!-- main_root takes the status-bar/cutout height as top padding (set in
+     MainActivity): the web app can't read Android's inset, and its top
+     chrome (Esc, list actions) must stay below the system-owned touch zone.
+     The strip stays black — invisible against the terminal. IME insets are
+     handled on the nav host. -->
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"

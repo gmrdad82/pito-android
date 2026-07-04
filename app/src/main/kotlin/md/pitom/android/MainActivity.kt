@@ -26,17 +26,17 @@ class MainActivity : HotwireActivity() {
 
         setContentView(R.layout.activity_main)
 
-        // Web content stops at the status bar (black strip above), because
-        // the web app can't read Android's inset; bottom/IME stays with the
-        // library's handler on the nav host.
+        // Web content stops below the status bar (black strip above): the
+        // page's own top chrome (Esc, list actions) must stay tappable, and
+        // touches inside the status-bar zone belong to the system. True
+        // glass under-flow needs the WEB to inset its fixed chrome — see the
+        // contract note in docs/claude (shell would inject the inset, pito
+        // renders a backdrop-filter header). statusBars ONLY — exactly the
+        // clock/battery row; the cutout inset can report taller and left a
+        // needlessly deep strip (owner 2026-07-05).
         val root = findViewById<View>(R.id.main_root)
         ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
-            // statusBars ∪ displayCutout: the punch-hole/notch region can
-            // exceed the status bar (esp. landscape) — pad past both.
-            val top = insets.getInsets(
-                WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.displayCutout()
-            ).top
-            view.updatePadding(top = top)
+            view.updatePadding(top = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top)
             insets
         }
         findViewById<View>(R.id.main_nav_host).applyDefaultImeWindowInsets()

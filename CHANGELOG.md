@@ -8,6 +8,18 @@ breaks the shell/server contract.
 
 ## [Unreleased]
 
+## [1.0.2] — 2026-07-05
+
+### Changed
+
+- **Launcher icon wears the brand** — the tile background is now pito-blue
+  (`--brand-pito: #5170ff`, same token as the web app) behind the white P.
+- **Status bar stays solid** — a glass under-flow was prototyped and
+  deliberately shelved: the web app's top controls (Esc, list actions) must
+  remain tappable, and touches inside the status-bar zone belong to the
+  system. The real glass (web-side `backdrop-filter` header that insets its
+  own chrome, shell injecting the inset) is logged as a cross-repo upgrade.
+
 ## [1.0.1] — 2026-07-05
 
 First round of real-device feedback, fixed.
