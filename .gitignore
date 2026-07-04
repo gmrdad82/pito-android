@@ -19,3 +19,10 @@ local.properties
 # Editor
 .idea/
 .vscode/
+
+# Claude guardrails ship with the repo (pito model): hooks + settings.json
+# are committed; everything else in .claude/ (local settings, runtime state)
+# stays machine-local.
+.claude/*
+!.claude/hooks/
+!.claude/settings.json
