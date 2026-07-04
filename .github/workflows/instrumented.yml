@@ -1,5 +1,9 @@
 name: Instrumented tests
 
+# NOTE: re-saved once to force workflow registration — GitHub silently
+# skipped registering this file on its original push (siblings from the
+# same commit registered fine).
+#
 # Espresso/emulator suite (connectedDebugAndroidTest) on a KVM-accelerated
 # Android 35 emulator. Deliberately NOT in the push/PR loop: emulator jobs
 # are slow (~10 min) and occasionally flaky, and the PR gate must stay fast

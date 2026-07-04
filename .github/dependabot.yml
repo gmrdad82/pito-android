@@ -17,6 +17,15 @@ updates:
         update-types:
           - minor
           - patch
+    # AGP 9 and Gradle >= 9.6 are a COUPLED migration (AGP 8.x breaks on
+    # Gradle 9.6's removed internals; AGP 9.x needs Gradle >= 9.4.1) that
+    # Dependabot can't land as one PR. Both ignores come off together when
+    # we do that migration deliberately (a minor release of its own).
+    ignore:
+      - dependency-name: "com.android.application"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "gradle"
+        versions: [">= 9.6"]
 
   - package-ecosystem: github-actions
     directory: "/"
