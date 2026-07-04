@@ -8,6 +8,28 @@ breaks the shell/server contract.
 
 ## [Unreleased]
 
+## [1.0.1] — 2026-07-05
+
+First round of real-device feedback, fixed.
+
+### Added
+
+- **Resume where you left off** — a cold start now reopens the page you were
+  on instead of the start screen (which quietly spawned a fresh "Unnamed"
+  conversation every launch). Same-origin only; switching servers resets it.
+- **Coverage gate** — Kover verifies the JVM-testable logic layer stays
+  above 80% line coverage (89.8% at adoption) on every CI run, the same
+  guardrail pito (SimpleCov) and pito-tui (go test) carry.
+
+### Fixed
+
+- **Status-bar collision** — web content no longer runs under the clock;
+  the shell pads exactly the status-bar height (an invisible black strip)
+  while the rest stays edge-to-edge.
+- **Launcher icon was a plain white tile** — the icon source carries an
+  opaque dark background that the white-glyph recolor painted over;
+  the background is now knocked out first. White P on black, as intended.
+
 ## [1.0.0] — 2026-07-04
 
 The first release: a thin [Hotwire Native](https://native.hotwired.dev)

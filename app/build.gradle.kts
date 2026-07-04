@@ -4,6 +4,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.serialization")
+    id("org.jetbrains.kotlinx.kover") version "0.9.8"
 }
 
 // versionCode derives from the release tag: v1.2.3 -> 10203. CI provides
@@ -78,6 +79,35 @@ android {
 
     testOptions {
         unitTests.isIncludeAndroidResources = true
+    }
+}
+
+// Coverage gate (parity with pito's SimpleCov / pito-tui's go test floor):
+// koverVerifyDebug fails the build when line coverage of the JVM-testable
+// code drops below the floor. Android lifecycle glue (Activities, custom
+// Views, the fragment) is exercised by the instrumented suite, which doesn't
+// feed this number — excluded so the floor measures logic, not theater.
+kover {
+    reports {
+        filters {
+            excludes {
+                classes(
+                    "md.pitom.android.BuildConfig",
+                    "md.pitom.android.MainActivity",
+                    "md.pitom.android.OnboardingActivity",
+                    "md.pitom.android.PitoWebFragment",
+                    "md.pitom.android.NeonLogoView*",
+                    "md.pitom.android.GlassButton",
+                )
+            }
+        }
+        variant("debug") {
+            verify {
+                rule {
+                    minBound(80)
+                }
+            }
+        }
     }
 }
 

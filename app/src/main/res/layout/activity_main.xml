@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.fragment.app.FragmentContainerView
+<!-- main_root takes the status-bar height as top padding (set in
+     MainActivity): the web app can't see Android's status bar inset, so
+     without it the terminal collides with the clock. The strip stays black —
+     invisible against the terminal. IME insets are handled on the nav host. -->
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main_nav_host"
-    android:name="dev.hotwire.navigation.navigator.NavigatorHost"
+    android:id="@+id/main_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:defaultNavHost="false" />
+    android:background="@color/black">
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/main_nav_host"
+        android:name="dev.hotwire.navigation.navigator.NavigatorHost"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:defaultNavHost="false" />
+</FrameLayout>

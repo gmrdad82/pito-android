@@ -13,6 +13,7 @@ import dev.hotwire.core.turbo.config.PathConfiguration
 object Instance {
     private const val PREFS = "pito"
     private const val KEY_URL = "instance_url"
+    private const val KEY_LAST_LOCATION = "last_location"
     private const val PATH_CONFIG_ASSET = "json/path-configuration.json"
     const val PATH_CONFIG_REMOTE_PATH = "/configurations/android_v1.json"
 
@@ -37,9 +38,38 @@ object Instance {
     fun save(context: Context, raw: String): SaveResult {
         val result = validate(raw)
         if (result == SaveResult.OK) {
-            prefs(context).edit().putString(KEY_URL, normalize(raw)).apply()
+            val normalized = normalize(raw)
+            val editor = prefs(context).edit().putString(KEY_URL, normalized)
+            // A different instance means the old resume point is meaningless.
+            if (normalized != urlOrNull(context)) editor.remove(KEY_LAST_LOCATION)
+            editor.apply()
         }
         return result
+    }
+
+    /** Remember where the user was, so a cold start resumes there instead of
+     *  the start screen (which would spawn a fresh conversation every open).
+     *  Only same-origin locations are kept — external URLs never become a
+     *  start location. */
+    fun saveLastLocation(context: Context, location: String?) {
+        val instance = urlOrNull(context) ?: return
+        if (location != null && sameOrigin(location, instance)) {
+            prefs(context).edit().putString(KEY_LAST_LOCATION, location).apply()
+        }
+    }
+
+    /** Where MainActivity starts: the last visited page on the CURRENT
+     *  instance, else the instance root. Null until an instance is saved. */
+    fun startLocation(context: Context): String? {
+        val instance = urlOrNull(context) ?: return null
+        val last = prefs(context).getString(KEY_LAST_LOCATION, null)
+        return if (last != null && sameOrigin(last, instance)) last else instance
+    }
+
+    private fun sameOrigin(a: String, b: String): Boolean {
+        val ua = Uri.parse(a)
+        val ub = Uri.parse(b)
+        return ua.scheme == ub.scheme && ua.host == ub.host && ua.port == ub.port
     }
 
     // Hostname sanity: labels of letters/digits/dots/hyphens (covers domains,

@@ -130,4 +130,51 @@ class InstanceTest {
         Instance.save(context, "https://my.own.host")
         assertThat(Instance.prefill(context)).isEqualTo("https://my.own.host")
     }
+
+    // --- resume (last location) ---------------------------------------------
+
+    @Test
+    fun `startLocation is null before an instance is saved`() {
+        assertThat(Instance.startLocation(context)).isNull()
+    }
+
+    @Test
+    fun `startLocation falls back to the instance root without a resume point`() {
+        Instance.save(context, "https://pito.example.com")
+        assertThat(Instance.startLocation(context)).isEqualTo("https://pito.example.com")
+    }
+
+    @Test
+    fun `startLocation resumes the last same-origin location`() {
+        Instance.save(context, "https://pito.example.com")
+        Instance.saveLastLocation(context, "https://pito.example.com/conversations/42")
+        assertThat(Instance.startLocation(context))
+            .isEqualTo("https://pito.example.com/conversations/42")
+    }
+
+    @Test
+    fun `cross-origin locations are never kept as resume points`() {
+        Instance.save(context, "https://pito.example.com")
+        Instance.saveLastLocation(context, "https://accounts.google.com/o/oauth2")
+        Instance.saveLastLocation(context, "http://pito.example.com/downgraded")
+        Instance.saveLastLocation(context, "https://pito.example.com:8443/other-port")
+        assertThat(Instance.startLocation(context)).isEqualTo("https://pito.example.com")
+    }
+
+    @Test
+    fun `switching instances clears the resume point`() {
+        Instance.save(context, "https://pito.example.com")
+        Instance.saveLastLocation(context, "https://pito.example.com/conversations/42")
+        Instance.save(context, "https://other.example.com")
+        assertThat(Instance.startLocation(context)).isEqualTo("https://other.example.com")
+    }
+
+    @Test
+    fun `re-saving the same instance keeps the resume point`() {
+        Instance.save(context, "https://pito.example.com")
+        Instance.saveLastLocation(context, "https://pito.example.com/conversations/42")
+        Instance.save(context, "https://pito.example.com/")  // normalizes to same
+        assertThat(Instance.startLocation(context))
+            .isEqualTo("https://pito.example.com/conversations/42")
+    }
 }
