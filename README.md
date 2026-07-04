@@ -19,6 +19,8 @@ baked in. Your server, your data, your phone.
 More of a terminal person? PITO also speaks ANSI:
 [**`pito-tui`**](https://github.com/gmrdad82/pito-tui) is the same chatbox —
 same server-side grammar, same live scrollback — living in your terminal.
+And for the full tour before you commit to anything, the showcase lives at
+[**pitomd.com**](https://pitomd.com) ([source](https://github.com/gmrdad82/pitomd)).
 
 ## Install
 
