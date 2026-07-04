@@ -15,14 +15,34 @@
         android:gravity="center"
         android:padding="32dp">
 
-        <TextView
+        <!-- Neon ASCII logo: glow layer behind (blurred via shadowLayer, alpha
+             pulsed in code) + crisp two-tone layer on top. Text is set from
+             AsciiLogo in OnboardingActivity; the frame carries the a11y label. -->
+        <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/app_name"
-            android:textColor="@color/pito_blue"
-            android:textSize="40sp"
-            android:fontFamily="monospace"
-            android:layout_marginBottom="48dp" />
+            android:layout_marginBottom="48dp"
+            android:contentDescription="@string/app_name">
+
+            <TextView
+                android:id="@+id/logo_glow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="monospace"
+                android:textSize="13sp"
+                android:textColor="@color/pito_blue"
+                android:includeFontPadding="false"
+                android:importantForAccessibility="no" />
+
+            <TextView
+                android:id="@+id/logo_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="monospace"
+                android:textSize="13sp"
+                android:includeFontPadding="false"
+                android:importantForAccessibility="no" />
+        </FrameLayout>
 
         <TextView
             android:layout_width="match_parent"
