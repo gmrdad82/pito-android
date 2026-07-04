@@ -13,16 +13,45 @@ baked in.
 
 ## Install
 
-Download the latest signed APK:
+One file, straight from GitHub — no store, no account.
+
+### Get the APK
+
+On your phone, open:
 
 **[github.com/gmrdad82/pito-android/releases/latest/download/pito.apk](https://github.com/gmrdad82/pito-android/releases/latest/download/pito.apk)**
 
-Open the file on your phone and allow your browser to install unknown apps
-when prompted (first time only). Updates install in place over the previous
-version — just download and open the new APK.
+Open the downloaded file with **Package installer**. The first time, Android
+asks you to allow your browser to install unknown apps — that's the normal
+sideload flow, and the only permission this ever needs. (If PITO's web app
+already knows you're on Android, it shows you this same link as a banner.)
 
-Requirements: Android 9 (API 28) or newer. Your instance must be served over
-**HTTPS** — plain-HTTP instances are not supported.
+### Requirements
+
+- Android 9 (API 28) or newer.
+- A PITO instance served over **HTTPS** — plain-HTTP instances are not
+  supported. Self-hosting on a LAN? Put TLS in front (a reverse proxy or the
+  tunnel the pito installer sets up).
+
+### Updates
+
+Same link, newer file: download, open, install — it updates **in place**,
+data and login intact. Android verifies every update against the same
+signing key, so only releases from this repo can update your install. Watch
+the [Releases](https://github.com/gmrdad82/pito-android/releases) page (or
+the CHANGELOG) to see what changed; there is no auto-updater and none is
+needed — everything inside the app is your server's UI and updates itself
+the moment your instance deploys.
+
+### Verify the download (optional, for the trust-nothing crowd)
+
+The release certificate never changes. If you want to check an APK before
+installing:
+
+```bash
+apksigner verify --print-certs pito.apk | grep SHA-256
+# 914624907d963c3a27303e86a742d9fdf8f301276216fbd5216914bc0ed02f3d
+```
 
 ## Connect
 
