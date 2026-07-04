@@ -1,0 +1,69 @@
+name: Feature request
+description: Suggest a change to the Android shell
+title: "[feature] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the suggestion.
+
+        Two reminders:
+        - **The app is a thin shell by design.** Screens, chat, data, and
+          workflows live in [pito](https://github.com/gmrdad82/pito) — feature
+          ideas about those belong there. This repo only owns install,
+          onboarding, navigation, and the native wrapper.
+        - **PITO is one person's tool, open-sourced as-is.** Feature requests
+          are a wishlist — no commitment to implementation. PRs welcome but
+          not guaranteed to be merged.
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What kind of suggestion?
+      options:
+        - "Install / distribution / updates"
+        - "Onboarding / instance switching"
+        - "Navigation (tabs, modals, back stack, external links)"
+        - "Native integration (share sheet, shortcuts, notifications)"
+        - "Offline / caching behavior"
+        - "CI / release pipeline"
+        - "Other"
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What use case or pain point is this solving?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Sketch how this might work. Doesn't have to be polished.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: What else have you tried? Why didn't it work?
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: ack
+    attributes:
+      label: Acknowledgment
+      options:
+        - label:
+            This is about the SHELL (install/onboarding/navigation/native),
+            not about screens or data the server renders.
+          required: true
+        - label: I've searched existing issues to avoid duplicates.
+          required: true

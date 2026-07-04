@@ -1,0 +1,30 @@
+# Dependabot configuration.
+#
+# Grouping intent (same as gmrdad82/pito): one consolidated weekly PR per
+# ecosystem for minor/patch bumps; major-version updates stay ungrouped so
+# they land as standalone PRs that get individual attention. Both ecosystems
+# share `interval: weekly` so updates land the same weekday.
+
+version: 2
+updates:
+  - package-ecosystem: gradle
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    groups:
+      gradle-minor-patch:
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    groups:
+      github-actions-all:
+        update-types:
+          - minor
+          - patch

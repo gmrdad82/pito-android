@@ -1,0 +1,149 @@
+name: Release (APK)
+
+# Builds the signed release APK and attaches it to a GitHub Release with the
+# STABLE asset name `pito.apk`, so
+# /releases/latest/download/pito.apk never breaks. No Play Store.
+#
+# Trigger model: TAG-ONLY. Fires exclusively on a version-tag push (`v1.0.0`,
+# `v1.2.3`, …). Day-to-day commits run build.yml; an APK is published only
+# when you cut a release tag: finish work → CI green →
+# `git tag v1.2.3 && git push origin v1.2.3` → this workflow ships it.
+#
+# versionCode/versionName derive from the tag inside app/build.gradle.kts
+# (GITHUB_REF_NAME: v1.2.3 → 10203). Android refuses in-place updates unless
+# versionCode increases AND the signing key matches — hence the gate below
+# and the one-keystore-forever rule.
+#
+# GREEN-CI GATE (same rule as gmrdad82/pito): a tag on a commit that is not
+# fully green must NOT ship. The `verify-ci` job waits for every other
+# workflow run on the tagged commit to complete and fails unless every
+# conclusion is success/skipped. No CI evidence at all also refuses (fail
+# closed).
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+  # Lets the Slack notifier query this run's job/step conclusions.
+  actions: read
+
+jobs:
+  verify-ci:
+    # THE GATE: block the release until the tagged commit is fully green.
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for green CI on the tagged commit
+        id: gate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ github.sha }}
+          REPO: ${{ github.repository }}
+        run: |
+          echo "Gating release on CI for $SHA"
+          deadline=$((SECONDS + 1800))    # 30 min for in-flight runs to finish
+          evidence_deadline=$((SECONDS + 180)) # 3 min for runs to even appear
+          while :; do
+            runs=$(gh api "repos/$REPO/actions/runs?head_sha=$SHA&per_page=100" \
+                     --jq '[.workflow_runs[] | select(.name != "Release (APK)")]')
+            total=$(jq 'length' <<<"$runs")
+            pending=$(jq '[.[] | select(.status != "completed")] | length' <<<"$runs")
+            bad=$(jq -r '[.[] | select(.status == "completed" and .conclusion != "success" and .conclusion != "skipped")]
+                          | map("\(.name): \(.conclusion)") | join(", ")' <<<"$runs")
+
+            if [ -n "$bad" ]; then
+              # CI already posts its OWN failure message — mark the reason so
+              # the refusal notify below stays silent (one message per event).
+              echo "reason=ci-red" >> "$GITHUB_OUTPUT"
+              echo "::error::CI is NOT green on $SHA — $bad. Refusing to release."
+              exit 1
+            fi
+            if [ "$total" -eq 0 ]; then
+              if [ "$SECONDS" -ge "$evidence_deadline" ]; then
+                echo "reason=no-evidence" >> "$GITHUB_OUTPUT"
+                echo "::error::No CI runs found for $SHA — refusing to release without CI evidence (fail closed)."
+                exit 1
+              fi
+              echo "no CI runs registered yet for $SHA — waiting…"
+            elif [ "$pending" -eq 0 ]; then
+              echo "All $total workflow run(s) green on $SHA — proceeding with the release."
+              exit 0
+            else
+              echo "waiting: $pending of $total run(s) still in progress…"
+            fi
+            if [ "$SECONDS" -ge "$deadline" ]; then
+              echo "reason=timeout" >> "$GITHUB_OUTPUT"
+              echo "::error::Timed out (30m) waiting for CI on $SHA."
+              exit 1
+            fi
+            sleep 30
+          done
+
+      # Failure-only, and ONLY for refusal modes nothing else announces
+      # (timeout / no CI evidence). A ci-red refusal stays silent here — CI
+      # posts its own failure message; one notification per event.
+      - name: Checkout code
+        if: failure() && steps.gate.outputs.reason != 'ci-red'
+        uses: actions/checkout@v7
+
+      - name: Notify Slack (release refused with no CI verdict)
+        if: failure() && steps.gate.outputs.reason != 'ci-red'
+        continue-on-error: true
+        uses: ./.github/actions/slack-notify
+        with:
+          headline: ":no_entry: *Release refused — no green CI verdict for the tagged commit (${{ steps.gate.outputs.reason || 'unknown' }}). No APK published.*"
+          status: ${{ job.status }}
+          webhook: ${{ secrets.SLACK_WEBHOOK }}
+          github-token: ${{ github.token }}
+
+  release:
+    needs: verify-ci
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Decode keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        run: printf '%s' "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/pito-release.jks"
+
+      - name: Build signed release APK
+        # GITHUB_REF_NAME is the tag (e.g. v1.0.0) → versionCode 10000.
+        env:
+          KEYSTORE_PATH: ${{ runner.temp }}/pito-release.jks
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: ./gradlew assembleRelease
+
+      - name: Stage stable-named asset
+        run: cp app/build/outputs/apk/release/app-release.apk pito.apk
+
+      - name: Create GitHub Release with pito.apk
+        uses: softprops/action-gh-release@v3
+        with:
+          files: pito.apk
+          generate_release_notes: true
+
+      # The one success ping per release (also fires on failure).
+      - name: Notify Slack
+        if: always()
+        continue-on-error: true
+        uses: ./.github/actions/slack-notify
+        with:
+          headline: ":package: *pito.apk ${{ github.ref_name }} published — /releases/latest/download/pito.apk*"
+          status: ${{ job.status }}
+          webhook: ${{ secrets.SLACK_WEBHOOK }}
+          github-token: ${{ github.token }}

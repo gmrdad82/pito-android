@@ -1,0 +1,76 @@
+name: CI
+
+# Android shell CI: JVM unit tests (Robolectric) + a debug APK on every
+# push / pull request to main. Instrumented (emulator) tests live in
+# instrumented.yml — deliberately OUT of the PR loop.
+#
+# Commit-message guard: include the literal token `[skipci]` (lowercase, no
+# space — distinct from GitHub's built-in `[skip ci]`) in the commit message
+# OR pull-request title to skip every job in this workflow.
+#
+# The GitHub ubuntu-latest runners ship the Android SDK with licenses
+# pre-accepted; AGP fetches any missing platform/build-tools itself — no
+# sdkmanager steps needed here.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  # `actions: read` lets the Slack notifier query this run's job/step
+  # conclusions to name the step that failed.
+  actions: read
+
+jobs:
+  build:
+    if: |
+      !contains(github.event.head_commit.message, '[skipci]') &&
+      !contains(github.event.pull_request.title, '[skipci]')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Run unit tests
+        run: ./gradlew testDebugUnitTest
+
+      - name: Upload test reports
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: unit-test-reports
+          path: app/build/reports/tests/
+          if-no-files-found: ignore
+
+      - name: Build debug APK
+        run: ./gradlew assembleDebug
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v7
+        with:
+          name: pito-debug-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+
+      # Failure-only: green pushes stay silent (the release workflow posts
+      # the one success ping per shipped version).
+      - name: Notify Slack
+        if: failure()
+        continue-on-error: true
+        uses: ./.github/actions/slack-notify
+        with:
+          status: ${{ job.status }}
+          webhook: ${{ secrets.SLACK_WEBHOOK }}
+          github-token: ${{ github.token }}

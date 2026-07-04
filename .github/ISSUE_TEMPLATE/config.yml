@@ -1,0 +1,17 @@
+blank_issues_enabled: false
+contact_links:
+  - name: README — what the app is and how to install it
+    url: https://github.com/gmrdad82/pito-android#pito-android
+    about:
+      Install the APK, connect it to your instance, build from source. Read
+      before opening an issue.
+  - name: PITO (the server) — issues about the app's CONTENT belong there
+    url: https://github.com/gmrdad82/pito/issues
+    about:
+      This shell only renders your instance. Bugs in screens, chat, data, or
+      anything you also see in a desktop browser are pito (Rails) bugs.
+  - name: Project status (no SLA, no support guarantees)
+    url: https://github.com/gmrdad82/pito#why-does-this-thing-exist
+    about:
+      PITO is one person's tool, open-sourced as-is. Read before opening an
+      issue.

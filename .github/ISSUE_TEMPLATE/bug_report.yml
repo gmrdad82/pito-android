@@ -1,0 +1,97 @@
+name: Bug report
+description: Report a bug in the Android shell (not in your PITO instance's UI)
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug report.
+
+        **First check it's a SHELL bug**: open the same screen in a mobile
+        browser against the same instance. If it's broken there too, it's a
+        [pito](https://github.com/gmrdad82/pito/issues) bug, not an app bug.
+
+        Reminder: **PITO is alpha and self-hosted. No SLA, no support
+        guarantees, no roadmap commitments.** Issues are triaged when
+        there's time. Quality reports get triaged faster.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which area?
+      options:
+        - "Install / update (APK, sideload, in-place updates)"
+        - "Onboarding / instance URL / Server screen"
+        - "WebView rendering (something works in the browser but not the app)"
+        - "Navigation (back stack, external links, Custom Tabs)"
+        - "Login / session / Google-account notice"
+        - "Keyboard / safe-area / edge-to-edge"
+        - "CI (.github/workflows/)"
+        - "Other / unsure"
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Describe the bug + what you expected to happen.
+      placeholder: |
+        I expected ... but ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Numbered, deterministic steps. Shortest possible repro.
+      placeholder: |
+        1. Install pito.apk vX.Y.Z
+        2. Connect to https://...
+        3. Tap ...
+        4. See error
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: App version
+      description: Settings → Apps → PITO, or the release tag you installed.
+      placeholder: e.g. v1.0.0
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Phone model + Android version + how your instance is hosted.
+      placeholder: e.g. Pixel 7, Android 15, self-hosted behind Caddy
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs / error output
+      description: |
+        `adb logcat` excerpts if you can get them. Use code blocks for text.
+      render: shell
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: ack
+    attributes:
+      label: Acknowledgment
+      options:
+        - label:
+            I verified the problem does NOT reproduce in a mobile browser
+            against the same instance (or it's clearly app-side, e.g. install
+            or navigation).
+          required: true
+        - label: I've searched existing issues to avoid duplicates.
+          required: true
