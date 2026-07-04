@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="fg">#FFE6E6E6</color>
+    <color name="hint">#FF666666</color>
+    <!-- pito-blue: the constant accent across all PITO themes -->
+    <color name="pito_blue">#FF5170FF</color>
+    <color name="error">#FFFF5555</color>
+</resources>

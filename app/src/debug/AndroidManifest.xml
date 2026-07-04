@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Debug-only overlay: permit cleartext for the local test loop
+         (on-device MockWebServer, emulator-host Rails). Release builds get
+         no networkSecurityConfig — platform default, https only. -->
+    <application android:networkSecurityConfig="@xml/network_security_config" />
+</manifest>
