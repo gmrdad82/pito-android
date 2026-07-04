@@ -1,15 +1,24 @@
 # PITO Android
 
+[![CI](https://github.com/gmrdad82/pito-android/actions/workflows/build.yml/badge.svg)](https://github.com/gmrdad82/pito-android/actions/workflows/build.yml)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+[![Sponsor](https://img.shields.io/badge/Sponsor-%E2%9D%A4-ff69b4?logo=githubsponsors)](https://github.com/sponsors/gmrdad82)
+
 Android client for [PITO](https://github.com/gmrdad82/pito) — the self-hosted,
 chat-first YouTube channel manager. This app is a thin
 [Hotwire Native](https://native.hotwired.dev) shell: it renders your PITO
 instance's own server-rendered UI full-screen with native navigation. No UI is
-reimplemented here; your server is the product, this is the window.
+reimplemented here; your server is the product, this is the window. That's
+also why the app is this small — and why it can never lag behind the web app.
 
 **The app is instance-agnostic.** PITO is self-hostable, and so is this
 client: on first launch you enter the URL of *your* instance — a box in your
 closet, a VPS, or a hosted instance such as `app.pitomd.com`. No backend is
-baked in.
+baked in. Your server, your data, your phone.
+
+More of a terminal person? PITO also speaks ANSI:
+[**`pito-tui`**](https://github.com/gmrdad82/pito-tui) is the same chatbox —
+same server-side grammar, same live scrollback — living in your terminal.
 
 ## Install
 
