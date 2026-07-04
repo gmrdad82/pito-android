@@ -64,10 +64,12 @@ jobs:
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
 
-      # Failure-only: green pushes stay silent (the release workflow posts
-      # the one success ping per shipped version).
+      # The `build` job is the single green "heartbeat" (same rule as pito's
+      # rails job): it pings on success too — one all-clear per push. Every
+      # OTHER notify across the workflows is failure-only, so green pushes
+      # produce exactly ONE Slack message.
       - name: Notify Slack
-        if: failure()
+        if: always()
         continue-on-error: true
         uses: ./.github/actions/slack-notify
         with:
