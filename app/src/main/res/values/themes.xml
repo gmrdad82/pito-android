@@ -3,6 +3,9 @@
     <!-- Always-dark: PITO is a terminal. Black colorBackground also kills the
          WebView white flash; black colorSurface feeds the Custom Tab toolbar. -->
     <style name="Theme.Pito" parent="Theme.Material3.Dark.NoActionBar">
+        <!-- DejaVu Sans Mono everywhere — native chrome matches the web UI. -->
+        <item name="android:fontFamily">@font/pito_mono</item>
+        <item name="fontFamily">@font/pito_mono</item>
         <item name="android:colorBackground">@color/black</item>
         <item name="colorSurface">@color/black</item>
         <item name="colorPrimary">@color/pito_blue</item>

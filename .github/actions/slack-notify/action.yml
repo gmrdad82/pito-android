@@ -145,6 +145,11 @@ runs:
               *tailwind*)               quip="Tailwind refused to compile your aesthetic." ;;
               *node*)                   quip="Node.js could not be located. Ironic." ;;
               *ruby*)                   quip="Ruby got out of bed on the wrong side." ;;
+              *unit\ tests*)            quip="A spec objects to your recent life choices." ;;
+              *debug\ apk*|*release\ apk*) quip="Gradle assembled everything except the APK." ;;
+              *keystore*)               quip="The keystore kept its secrets a little too well." ;;
+              *instrumented*|*emulator*) quip="The emulator phoned it in. Literally." ;;
+              *jdk*|*gradle*)           quip="The toolchain took a personal day." ;;
               *checkout*)               quip="We couldn't even check out the code. Bold start." ;;
             esac
             shopt -u nocasematch

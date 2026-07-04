@@ -5,5 +5,6 @@
     <color name="hint">#FF666666</color>
     <!-- pito-blue: the constant accent across all PITO themes -->
     <color name="pito_blue">#FF5170FF</color>
+    <color name="pito_purple">#FF8B5CF6</color>
     <color name="error">#FFFF5555</color>
 </resources>

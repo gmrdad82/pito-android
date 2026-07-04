@@ -1,14 +1,8 @@
 package md.pitom.android
 
-import android.graphics.Color
-import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
 
-@RunWith(RobolectricTestRunner::class)
 class AsciiLogoTest {
 
     @Test
@@ -16,24 +10,28 @@ class AsciiLogoTest {
         assertThat(AsciiLogo.LINES).hasSize(6)
         // Fixed-width art: every row the same length, or the columns shear.
         assertThat(AsciiLogo.LINES.map { it.length }.distinct()).hasSize(1)
-        assertThat(AsciiLogo.text).contains("█").contains("╚")
+        assertThat(AsciiLogo.cols).isEqualTo(AsciiLogo.LINES[0].length)
+        assertThat(AsciiLogo.rows).isEqualTo(6)
     }
 
     @Test
-    fun `blocks get the accent color and the frame gets the dim color`() {
-        val blue = Color.rgb(0x51, 0x70, 0xFF)
-        val dim = Color.GRAY
-        val spanned = AsciiLogo.spannable(blockColor = blue, frameColor = dim) as SpannableString
+    fun `cells cover every visible glyph and classify blocks vs frame`() {
+        val cells = AsciiLogo.cells()
+        val visible = AsciiLogo.LINES.sumOf { line -> line.count { it != ' ' } }
+        assertThat(cells).hasSize(visible)
 
-        val spans = spanned.getSpans(0, spanned.length, ForegroundColorSpan::class.java)
-        assertThat(spans).isNotEmpty()
-        spans.forEach { span ->
-            val ch = spanned[spanned.getSpanStart(span)]
-            val expected = if (ch == '█') blue else dim
-            assertThat(span.foregroundColor).isEqualTo(expected)
+        val blocks = cells.filter { it.isBlock }
+        val frame = cells.filterNot { it.isBlock }
+        assertThat(blocks).isNotEmpty()
+        assertThat(frame).isNotEmpty()
+        // The frame is exactly the box-drawing set the view knows how to draw.
+        assertThat(frame.map { it.char }.distinct())
+            .containsExactlyInAnyOrder('╗', '╔', '╝', '╚', '═', '║')
+        // Cells carry valid coordinates.
+        assertThat(cells).allSatisfy { cell ->
+            assertThat(cell.row).isBetween(0, AsciiLogo.rows - 1)
+            assertThat(cell.col).isBetween(0, AsciiLogo.cols - 1)
+            assertThat(AsciiLogo.LINES[cell.row][cell.col]).isEqualTo(cell.char)
         }
-        // Every visible glyph is colored — nothing falls through to default.
-        val visible = AsciiLogo.text.count { it != ' ' && it != '\n' }
-        assertThat(spans.size).isEqualTo(visible)
     }
 }

@@ -1,16 +1,14 @@
 package md.pitom.android
 
-import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
 import android.content.Intent
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
-import android.view.animation.LinearInterpolator
+import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
@@ -33,12 +31,12 @@ class OnboardingActivity : AppCompatActivity() {
         }
 
         setContentView(R.layout.activity_onboarding)
-        renderNeonLogo()
         val urlField = findViewById<EditText>(R.id.instance_url)
         val errorView = findViewById<TextView>(R.id.error)
+        val connectButton = findViewById<Button>(R.id.connect)
         urlField.setText(Instance.prefill(this))
 
-        findViewById<Button>(R.id.connect).setOnClickListener {
+        connectButton.setOnClickListener {
             when (Instance.save(this, urlField.text.toString())) {
                 Instance.SaveResult.OK -> {
                     Instance.configureHotwire(applicationContext)
@@ -48,35 +46,17 @@ class OnboardingActivity : AppCompatActivity() {
                 Instance.SaveResult.INVALID -> showError(errorView, R.string.error_invalid_url)
             }
         }
-    }
 
-    /** Broken-neon treatment of the web start screen's block logo: crisp
-     *  two-tone art over a blurred glow layer; tube-ignition flicker on
-     *  entry, then a slow breathing glow. Animators respect the system
-     *  animation scale (reduced motion → static glow). */
-    private fun renderNeonLogo() {
-        val blue = ContextCompat.getColor(this, R.color.pito_blue)
-        val dim = ContextCompat.getColor(this, R.color.hint)
-
-        val crisp = findViewById<TextView>(R.id.logo_text)
-        crisp.text = AsciiLogo.spannable(blockColor = blue, frameColor = dim)
-
-        val glow = findViewById<TextView>(R.id.logo_glow)
-        glow.text = AsciiLogo.text
-        glow.setShadowLayer(14f, 0f, 0f, blue)
-
-        // Ignition: stuttering alpha like a neon tube catching.
-        ObjectAnimator.ofFloat(crisp, View.ALPHA, 0f, 1f, 0.35f, 1f, 0.65f, 1f).apply {
-            duration = 900
-            start()
-        }
-        // Afterglow: gentle infinite breathe on the glow layer.
-        ObjectAnimator.ofFloat(glow, View.ALPHA, 0.25f, 0.6f).apply {
-            duration = 2400
-            repeatCount = ValueAnimator.INFINITE
-            repeatMode = ValueAnimator.REVERSE
-            interpolator = LinearInterpolator()
-            start()
+        // Enter / the keyboard's Go key submits like tapping Connect.
+        urlField.setOnEditorActionListener { _, actionId, event ->
+            val enterDown = event?.keyCode == KeyEvent.KEYCODE_ENTER &&
+                event.action == KeyEvent.ACTION_DOWN
+            if (actionId == EditorInfo.IME_ACTION_GO || enterDown) {
+                connectButton.performClick()
+                true
+            } else {
+                false
+            }
         }
     }
 

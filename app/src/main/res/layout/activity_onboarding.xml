@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
@@ -15,41 +14,19 @@
         android:gravity="center"
         android:padding="32dp">
 
-        <!-- Neon ASCII logo: glow layer behind (blurred via shadowLayer, alpha
-             pulsed in code) + crisp two-tone layer on top. Text is set from
-             AsciiLogo in OnboardingActivity; the frame carries the a11y label. -->
-        <FrameLayout
-            android:layout_width="wrap_content"
+        <!-- The web start screen's block logo, drawn cell-by-cell with the
+             broken-neon reveal (see NeonLogoView). -->
+        <md.pitom.android.NeonLogoView
+            android:id="@+id/logo"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="48dp"
-            android:contentDescription="@string/app_name">
-
-            <TextView
-                android:id="@+id/logo_glow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="monospace"
-                android:textSize="13sp"
-                android:textColor="@color/pito_blue"
-                android:includeFontPadding="false"
-                android:importantForAccessibility="no" />
-
-            <TextView
-                android:id="@+id/logo_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="monospace"
-                android:textSize="13sp"
-                android:includeFontPadding="false"
-                android:importantForAccessibility="no" />
-        </FrameLayout>
+            android:layout_marginBottom="48dp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/instance_url_label"
             android:textColor="@color/fg"
-            android:fontFamily="monospace"
             android:layout_marginBottom="8dp" />
 
         <EditText
@@ -61,7 +38,6 @@
             android:hint="@string/instance_url_hint"
             android:textColor="@color/fg"
             android:textColorHint="@color/hint"
-            android:fontFamily="monospace"
             android:backgroundTint="@color/pito_blue"
             android:imeOptions="actionGo"
             android:maxLines="1" />
@@ -71,19 +47,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/error"
-            android:fontFamily="monospace"
             android:layout_marginTop="8dp"
             android:visibility="gone" />
 
-        <com.google.android.material.button.MaterialButton
+        <md.pitom.android.GlassButton
             android:id="@+id/connect"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="56dp"
             android:layout_marginTop="24dp"
             android:text="@string/connect"
-            android:textColor="@color/black"
-            android:fontFamily="monospace"
-            android:backgroundTint="@color/pito_blue"
-            app:cornerRadius="0dp" />
+            android:textColor="@color/fg"
+            android:textSize="16sp"
+            android:textAllCaps="false"
+            android:background="@null" />
     </LinearLayout>
 </ScrollView>
