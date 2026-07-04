@@ -135,7 +135,12 @@ jobs:
         uses: softprops/action-gh-release@v3
         with:
           files: pito.apk
-          generate_release_notes: true
+          # A fixed body instead of generate_release_notes: generated notes
+          # APPEND on every rerun, so a fix→retag→repush of the same version
+          # (the owner's solo flow) would stack duplicate "Full Changelog"
+          # lines. This body replaces idempotently; the real history lives
+          # in CHANGELOG.md.
+          body: "Details: [CHANGELOG](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md)"
 
       # The one success ping per release (also fires on failure).
       - name: Notify Slack
