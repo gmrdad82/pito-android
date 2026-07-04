@@ -143,7 +143,8 @@ jobs:
         continue-on-error: true
         uses: ./.github/actions/slack-notify
         with:
-          headline: ":package: *pito.apk ${{ github.ref_name }} published — /releases/latest/download/pito.apk*"
+          headline: ":package: *pito.apk ${{ github.ref_name }} published*"
+          extra: "Install it: https://github.com/${{ github.repository }}/releases/latest/download/pito.apk (release notes: https://github.com/${{ github.repository }}/releases/tag/${{ github.ref_name }})"
           status: ${{ job.status }}
           webhook: ${{ secrets.SLACK_WEBHOOK }}
           github-token: ${{ github.token }}
