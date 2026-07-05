@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- OVERRIDES the Hotwire Navigation library's loading screen by resource
+     name (Android resource merging prefers the app's copy): the stock layout
+     is a bare ProgressBar on colorBackground — this one boots like the web
+     app instead, playing the SAME broken-neon logo reveal the onboarding
+     uses (NeonLogoView self-starts on attach and stops on detach, so a
+     layout swap is the whole feature). Black root matches main_root and the
+     terminal's own background, so the handoff to the painted WebView is
+     seamless. -->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black">
+
+    <md.pitom.android.NeonLogoView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
