@@ -42,6 +42,13 @@ class PitoApplication : Application() {
         Hotwire.config.makeCustomWebView = { context ->
             HotwireWebView(context).apply {
                 settings.mediaPlaybackRequiresUserGesture = false
+                // WebView defaults textZoom to the SYSTEM font-size setting,
+                // silently scaling every glyph — pito's braille charts are
+                // sized in exact 14px cells, so any scale >100 overflows
+                // their columns (the "APK charts overshoot" bug). Browsers
+                // don't apply the OS scale this way; pin the WebView to
+                // match them.
+                settings.textZoom = 100
             }
         }
 
