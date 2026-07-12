@@ -114,6 +114,9 @@ kover {
 dependencies {
     implementation("dev.hotwire:core:1.2.8")
     implementation("dev.hotwire:navigation-fragments:1.2.8")
+    // Already in the runtime graph via navigation-fragments; declared so the
+    // in-place pull-to-refresh override can type against SwipeRefreshLayout.
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     implementation("com.google.android.material:material:1.12.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
 

@@ -8,6 +8,23 @@ breaks the shell/server contract.
 
 ## [Unreleased]
 
+## [1.2.0] — 2026-07-12
+
+### Changed
+
+- **Pull-down does nothing now** — the native swipe-to-refresh (a cold-boot
+  reload that unloaded the document into a dead black frame) is disabled
+  outright: no spinner, no reload, inert glass. The chat's one refresh
+  gesture is PITO's own bottom pull-up, exactly as on the web; the error
+  screen's pull keeps the real reload (that document is already gone), and
+  the neon logo remains what it was always meant to be: app-boot chrome.
+
+### Fixed
+
+- **System font scale stops inflating the charts** — the WebView's text zoom
+  is pinned to 100 so braille visualizations render at the geometry the
+  server laid out.
+
 ## [1.0.2] — 2026-07-05
 
 ### Changed
