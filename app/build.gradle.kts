@@ -112,24 +112,24 @@ kover {
 }
 
 dependencies {
-    implementation("dev.hotwire:core:1.2.8")
-    implementation("dev.hotwire:navigation-fragments:1.2.8")
+    implementation("dev.hotwire:core:1.3.0")
+    implementation("dev.hotwire:navigation-fragments:1.3.0")
     // Already in the runtime graph via navigation-fragments; declared so the
     // in-place pull-to-refresh override can type against SwipeRefreshLayout.
-    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
-    implementation("com.google.android.material:material:1.12.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0")
+    implementation("com.google.android.material:material:1.14.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.robolectric:robolectric:4.16.1")
     testImplementation("androidx.test:core-ktx:1.7.0")
-    testImplementation("org.assertj:assertj-core:3.26.3")
-    testImplementation("com.squareup.okhttp3:mockwebserver:5.3.2")
+    testImplementation("org.assertj:assertj-core:3.27.7")
+    testImplementation("com.squareup.okhttp3:mockwebserver:5.4.0")
 
     androidTestImplementation("androidx.test.ext:junit-ktx:1.3.0")
     androidTestImplementation("androidx.test:runner:1.7.0")
     androidTestImplementation("androidx.test:rules:1.7.0")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.7.0")
     androidTestImplementation("androidx.test.espresso:espresso-web:3.7.0")
-    androidTestImplementation("com.squareup.okhttp3:mockwebserver:5.3.2")
+    androidTestImplementation("com.squareup.okhttp3:mockwebserver:5.4.0")
 }
