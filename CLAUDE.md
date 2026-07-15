@@ -14,7 +14,8 @@ GitHub Releases (no Play Store).
 
 ## The log law (non-negotiable; mechanically enforced)
 
-The active working plan in `~/Dev/dev-notes/pito-android/*.md` is the **single
+The active working plan (`*.md` in the local notes directory — per-person and
+optional) is the **single
 source of truth** — what's done, what's next, every bug/feedback/decision/
 discussion item the owner raised. NEVER hold work in your own memory, a
 scratch plan-mode buffer, or the harness todo list. If it isn't in the
@@ -44,7 +45,7 @@ anything the regex can't know (a bare token pasted alone), move the value to
 its proper home (`.env`, config) and REDACT the INBOX occurrence in the same
 turn — the ledger keeps a `[redacted:<what>]` marker, never the value.
 code/git — never from memory. `.claude/INBOX.md` is gitignored; plans live in
-`~/Dev/dev-notes/pito-android/` (outside the repo entirely, qmd-indexed); the
+the local notes directory (outside the repo entirely); the
 hooks + this file are committed so the guard ships with the repo.
 
 ## How we work
@@ -81,7 +82,7 @@ hooks + this file are committed so the guard ships with the repo.
 
 A **plan is an atomic-task `.md` file** that tracks the work it describes —
 not freeform prose, not the throwaway plan-mode scratch buffer. Plans live
-**outside the repo**, in `~/Dev/dev-notes/pito-android/` (local-only, never
+**outside the repo**, in the local notes directory (local-only, never
 checked in — `.claude/INBOX.md` is the only plan-adjacent file that IS
 gitignored inside the repo). Write nothing — no edits, commits, or
 sub-agents — until the owner approves the plan.
@@ -215,7 +216,7 @@ app/src/debug/           debug-only manifest overlay (cleartext for localhost/10
 app/src/test/            Robolectric unit tests
 app/src/androidTest/     Espresso instrumented tests
 .github/workflows/       build.yml (CI) · instrumented.yml (weekly/manual) · release.yml (tags)
-~/Dev/dev-notes/pito-android/             agent working docs — GITIGNORED, local only
+<local notes dir>/       agent working docs — outside the repo (per-person, optional)
 ```
 
 ## CI / release
