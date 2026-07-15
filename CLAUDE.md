@@ -14,7 +14,7 @@ GitHub Releases (no Play Store).
 
 ## The log law (non-negotiable; mechanically enforced)
 
-The active working plan in `~/Dev/notes/pito-android/*.md` is the **single
+The active working plan in `~/Dev/dev-notes/pito-android/*.md` is the **single
 source of truth** — what's done, what's next, every bug/feedback/decision/
 discussion item the owner raised. NEVER hold work in your own memory, a
 scratch plan-mode buffer, or the harness todo list. If it isn't in the
@@ -44,7 +44,7 @@ anything the regex can't know (a bare token pasted alone), move the value to
 its proper home (`.env`, config) and REDACT the INBOX occurrence in the same
 turn — the ledger keeps a `[redacted:<what>]` marker, never the value.
 code/git — never from memory. `.claude/INBOX.md` is gitignored; plans live in
-`~/Dev/notes/pito-android/` (outside the repo entirely, qmd-indexed); the
+`~/Dev/dev-notes/pito-android/` (outside the repo entirely, qmd-indexed); the
 hooks + this file are committed so the guard ships with the repo.
 
 ## How we work
@@ -68,6 +68,8 @@ hooks + this file are committed so the guard ships with the repo.
   `git push` (nor `stash` / `checkout` / `restore` / `reset`), never picks a
   branch, and never assumes a release or deploy flow — the owner decides
   every git operation, every time, after reviewing the diff.
+- **Never force-push a branch.** When origin has moved, `git pull --rebase`
+  before pushing — remote history is never rewritten.
 - **System-level changes** (SDK, packages, shell profiles, keystores) are
   the owner's to run — produce an explained runbook, never execute them
   silently.
@@ -79,7 +81,7 @@ hooks + this file are committed so the guard ships with the repo.
 
 A **plan is an atomic-task `.md` file** that tracks the work it describes —
 not freeform prose, not the throwaway plan-mode scratch buffer. Plans live
-**outside the repo**, in `~/Dev/notes/pito-android/` (local-only, never
+**outside the repo**, in `~/Dev/dev-notes/pito-android/` (local-only, never
 checked in — `.claude/INBOX.md` is the only plan-adjacent file that IS
 gitignored inside the repo). Write nothing — no edits, commits, or
 sub-agents — until the owner approves the plan.
@@ -213,7 +215,7 @@ app/src/debug/           debug-only manifest overlay (cleartext for localhost/10
 app/src/test/            Robolectric unit tests
 app/src/androidTest/     Espresso instrumented tests
 .github/workflows/       build.yml (CI) · instrumented.yml (weekly/manual) · release.yml (tags)
-~/Dev/notes/pito-android/             agent working docs — GITIGNORED, local only
+~/Dev/dev-notes/pito-android/             agent working docs — GITIGNORED, local only
 ```
 
 ## CI / release
