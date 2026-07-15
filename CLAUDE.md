@@ -6,24 +6,24 @@ GitHub Releases (no Play Store).
 
 ## The log law (non-negotiable; mechanically enforced)
 
-The active working plan in `docs/claude/*.md` is the **single source of
+The active working plan in `~/Dev/notes/pito-android/*.md` is the **single source of
 truth** — every todo, bug, decision, and discussion item the owner raised.
 NEVER hold work in your own memory or the harness todo list. If it isn't in
 the working md, it does not exist.
 
 A `UserPromptSubmit` hook (`.claude/hooks/capture-prompt.sh`) appends every
-owner message verbatim to `docs/claude/INBOX.md` as a `## ⛔ UNPROCESSED`
+owner message verbatim to `.claude/INBOX.md` as a `## ⛔ UNPROCESSED`
 block. **Every turn, before anything else:**
 
-1. Read `docs/claude/INBOX.md`.
+1. Read `.claude/INBOX.md`.
 2. **Drain** each `⛔ UNPROCESSED` block into the active plan — turn EVERY
    item into an explicit task/line; split compound messages; lose nothing.
 3. Rewrite the block heading in place to `## ✅ processed — <ts> -> <plan refs>`.
    Never delete it — the back-reference makes capture auditable.
 
 The `Stop` hook (`.claude/hooks/check-inbox.sh`) refuses to end a turn while
-any `⛔ UNPROCESSED` block remains. `docs/claude/` (INBOX + plans) is
-gitignored (local-only); the hooks + this section are committed so the guard
+any `⛔ UNPROCESSED` block remains. `.claude/INBOX.md` is gitignored; plans live in
+`~/Dev/notes/pito-android/` (outside the repo, qmd-indexed); the hooks + this section are committed so the guard
 ships with the repo.
 
 ## What this is
@@ -73,7 +73,7 @@ app/src/debug/           debug-only manifest overlay (cleartext for localhost/10
 app/src/test/            Robolectric unit tests
 app/src/androidTest/     Espresso instrumented tests
 .github/workflows/       build.yml (CI) · instrumented.yml (weekly/manual) · release.yml (tags)
-docs/claude/             agent working docs — GITIGNORED, local only
+~/Dev/notes/pito-android/             agent working docs — GITIGNORED, local only
 ```
 
 ## Invariants (don't break these)
@@ -108,7 +108,7 @@ docs/claude/             agent working docs — GITIGNORED, local only
 ## Way of working
 
 - **Atomic tasks**, one verb each, tracked as checkboxes in the active
-  `docs/claude/` plan (`[ ]`→`[-]`→`[x]`, one edit per transition).
+  `~/Dev/notes/pito-android/` plan (`[ ]`→`[-]`→`[x]`, one edit per transition).
 - **Done means verified**: `./gradlew testDebugUnitTest` green +
   `assembleDebug` builds; UI-touching changes get checked on a device or
   emulator before the task closes. New code ships with tests.

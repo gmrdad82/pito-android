@@ -11,7 +11,7 @@ local.properties
 *.keystore
 
 # Agent working docs (plans/specs/briefs) — local only
-/docs/claude/
+/.claude/INBOX.md
 
 # Scratch
 /tmp/
