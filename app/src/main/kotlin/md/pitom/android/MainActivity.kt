@@ -29,11 +29,11 @@ class MainActivity : HotwireActivity() {
         // Web content stops below the status bar (black strip above): the
         // page's own top chrome (Esc, list actions) must stay tappable, and
         // touches inside the status-bar zone belong to the system. True
-        // glass under-flow needs the WEB to inset its fixed chrome — see the
-        // contract note in docs/claude (shell would inject the inset, pito
-        // renders a backdrop-filter header). statusBars ONLY — exactly the
-        // clock/battery row; the cutout inset can report taller and left a
-        // needlessly deep strip (owner 2026-07-05).
+        // glass under-flow needs the WEB to inset its fixed chrome — logged
+        // as a cross-repo contract with pito (shell would inject the inset,
+        // pito renders a backdrop-filter header). statusBars ONLY — exactly
+        // the clock/battery row; the cutout inset can report taller and left
+        // a needlessly deep strip (owner 2026-07-05).
         val root = findViewById<View>(R.id.main_root)
         ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
             view.updatePadding(top = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top)

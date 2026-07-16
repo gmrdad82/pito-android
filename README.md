@@ -95,3 +95,10 @@ the signing key matches, so sideload only release-signed APKs.
 ## License
 
 [AGPL-3.0](LICENSE), same as PITO.
+
+---
+
+Built alongside the channel that needed it — @gmrdad82.
+
+<!-- prettier-ignore -->
+<p align="center"><a href="https://www.youtube.com/@gmrdad82"><img src="docs/avatars/@gmrdad82.png" width="80" alt="@gmrdad82"></a></p>
