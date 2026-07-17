@@ -1,117 +1,22 @@
-# Working agreement (for Claude / agents) — pito-android
+# pito-android — project guide (for Claude / agents)
 
 Agent guide for **pito-android** — the Hotwire Native (Kotlin) Android shell
 for [PITO](https://github.com/gmrdad82/pito), distributed as a signed APK via
 GitHub Releases (no Play Store).
 
-> **READ THIS FIRST, EVERY RUN.** Highest authority; overrides the harness's
-> default plan/execution flow on any conflict. Self-contained. This repo is
-> deliberately small — a thin shell, not a product of its own. Deeper PITO
-> product architecture lives in the `pito` repo (`docs/architecture.md`,
-> `docs/design.md` for the visual tokens this shell's theme tracks); this
-> repo's own `README.md` covers install/build/connect — read the relevant
-> one before writing code, don't work from memory.
+> The global working agreement (`~/.claude/CLAUDE.md`) applies here; this
+> file carries only pito-android specifics. This repo is deliberately small —
+> a thin shell, not a product of its own. Deeper PITO product architecture
+> lives in the `pito` repo (`docs/architecture.md`, `docs/design.md` for the
+> visual tokens this shell's theme tracks); this repo's own `README.md`
+> covers install/build/connect — read the relevant one before writing code,
+> don't work from memory.
 
-## The log law (non-negotiable; mechanically enforced)
+## Working here
 
-The active working plan (`*.md` in the local notes directory — per-person and
-optional) is the **single
-source of truth** — what's done, what's next, every bug/feedback/decision/
-discussion item the owner raised. NEVER hold work in your own memory, a
-scratch plan-mode buffer, or the harness todo list. If it isn't in the
-working md, it does not exist.
-
-A `UserPromptSubmit` hook (`.claude/hooks/capture-prompt.sh`) appends every
-owner message verbatim to `.claude/INBOX.md` as a `## ⛔ UNPROCESSED` block.
-**Every turn, before anything else:**
-
-1. Read `.claude/INBOX.md`.
-2. **Drain** each `⛔ UNPROCESSED` block into the active plan — turn EVERY
-   item (todo, bug, feedback, question, decision) into an explicit task/line
-   in the right section; split compound messages; lose nothing.
-3. Rewrite the block heading in place to
-   `## ✅ processed — <ts> -> <plan refs>` (the task IDs it became, or
-   `no-op (<why>)`). Never delete it — the back-reference makes capture
-   auditable.
-4. Keep checkboxes in sync the instant a task changes state
-   (`[ ]`→`[-]`→`[x]`), one edit per transition — it's what the owner watches.
-
-The `Stop` hook (`.claude/hooks/check-inbox.sh`) refuses to end a turn while
-any `⛔ UNPROCESSED` block remains. Report status ONLY from the md + verified
-
-**Secrets never live in the ledger.** The capture hook masks keyed values
-(`key=…`, `token: …`, webhooks, bearers) mechanically before appending; for
-anything the regex can't know (a bare token pasted alone), move the value to
-its proper home (`.env`, config) and REDACT the INBOX occurrence in the same
-turn — the ledger keeps a `[redacted:<what>]` marker, never the value.
-code/git — never from memory. `.claude/INBOX.md` is gitignored; plans live in
-the local notes directory (outside the repo entirely); the
-hooks + this file are committed so the guard ships with the repo.
-
-## How we work
-
-- **Small surface, thin shell.** This app renders another app's UI — never
-  rebuild web UI natively, never add a native feature the web side can
-  serve. When in doubt, the fix belongs in the `pito` repo, not here.
-- **One atomic task per sub-agent.** Never pack multi-step work into a
-  single dispatch. A Kotlin class and its test are TWO tasks. There is
-  **NO "it's cohesive / it's one feature" exception**.
-  - **Pre-dispatch check, every Agent/Task/Workflow call:** read the prompt
-    back — if it names more than one deliverable, split it, or do it inline.
-    Small/atomic work: do it inline, don't spawn an agent. A `PreToolUse`
-    hook (`.claude/hooks/atomic-agent-check.py`) enforces this mechanically
-    on every dispatch and blocks the ones that name 2+ deliverables.
-  - When reviewing an agent's result, read the **changed files**, not its
-    summary.
-- **Keep a visible TodoWrite list** mirroring the plan's tasks, flipped per
-  transition (one `in_progress` at a time).
-- **Git belongs to the owner.** Claude never runs `git commit` / `git tag` /
-  `git push` (nor `stash` / `checkout` / `restore` / `reset`), never picks a
-  branch, and never assumes a release or deploy flow — the owner decides
-  every git operation, every time, after reviewing the diff.
-- **Never force-push a branch.** When origin has moved, `git pull --rebase`
-  before pushing — remote history is never rewritten.
 - **System-level changes** (SDK, packages, shell profiles, keystores) are
   the owner's to run — produce an explained runbook, never execute them
   silently.
-- **No VHS / terminal casts / throwaway Docker stacks without explicit
-  owner OK** — same rule as `pito`; a cast teardown wiped the owner's
-  production volumes there once.
-
-## Plan discipline (lean)
-
-A **plan is an atomic-task `.md` file** that tracks the work it describes —
-not freeform prose, not the throwaway plan-mode scratch buffer. Plans live
-**outside the repo**, in the local notes directory (local-only, never
-checked in — `.claude/INBOX.md` is the only plan-adjacent file that IS
-gitignored inside the repo). Write nothing — no edits, commits, or
-sub-agents — until the owner approves the plan.
-
-**Shape.** `# Title`, a `> Status:` line, a one-paragraph north star,
-optional **Locked decisions** table, a phase index, then phases of one-verb
-tasks:
-
-```
-- [ ] T<N>.<M> <imperative description>. complexity: [low|high|manual]
-```
-
-One verb per task (split on "and"), verifiable in ≤5 min, naming the file or
-command it touches. Three complexity tiers only:
-
-- `[manual]` — operator by hand: git operations (owner-only), signing/credentials,
-  device or emulator smoke tests, design calls.
-- `[low]` — mechanical / moderate work a cheap model can run: a single
-  Kotlin class, a layout tweak, a unit test, pattern-following edits.
-- `[high]` — architectural / cross-cutting: Hotwire routing/config,
-  signing/versioning, the network-security policy, the path-configuration
-  contract — a decision a cheap model shouldn't make alone.
-
-Every phase ends with its diff ready for the owner's review.
-
-**Execution.** Checkboxes are the live record: `[ ]` → `[-]` before starting
-a task, `[-]` → `[x]` immediately after its verification passes — one edit
-per transition, never batched. Announce each task's complexity tier and let
-the owner pick the model before starting.
 
 **Done means verified**, against this repo's real gates:
 
