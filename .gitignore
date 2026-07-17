@@ -10,9 +10,6 @@ local.properties
 *.jks
 *.keystore
 
-# Agent working docs (plans/specs/briefs) — local only
-/.claude/INBOX.md
-
 # Scratch
 /tmp/
 
@@ -20,9 +17,7 @@ local.properties
 .idea/
 .vscode/
 
-# Claude guardrails ship with the repo (pito model): hooks + settings.json
-# are committed; everything else in .claude/ (local settings, runtime state)
-# stays machine-local.
+# Claude settings.json is committed; everything else in .claude/ (local
+# settings, runtime state) stays machine-local.
 .claude/*
-!.claude/hooks/
 !.claude/settings.json
