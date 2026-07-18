@@ -47,7 +47,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v6
 
       - name: Run instrumented tests on emulator
-        uses: reactivecircus/android-emulator-runner@v2.37.0
+        uses: reactivecircus/android-emulator-runner@v2.38.0
         with:
           api-level: 35
           arch: x86_64
