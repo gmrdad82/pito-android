@@ -8,6 +8,14 @@ breaks the shell/server contract.
 
 ## [Unreleased]
 
+### Changed
+
+- **Boot chrome, trimmed a bit** — the status-bar padding strip above the web
+  content is now the full inset minus a small `STATUS_BAR_TRIM_DP` constant
+  (floored at zero), and the neon logo on the boot/loading screen sits at
+  ~40% of screen height instead of dead center, slightly above the middle.
+  Both are taste calls the owner tunes by eye on device.
+
 ### Added
 
 - **Push build wiring** — `com.google.gms.google-services` (4.5.0) and
