@@ -18,6 +18,12 @@ import androidx.core.graphics.drawable.IconCompat
  * PITO instance. Shows the form on first run (no URL stored) or when opened
  * via the "Server" launcher shortcut; otherwise forwards straight to
  * MainActivity without rendering.
+ *
+ * Forwarding (see [startMain]) has two flavors: the fast-forward path
+ * (already configured) resumes MainActivity's existing task warm — no
+ * teardown, so the neon boot chrome doesn't replay on every launcher-icon
+ * tap; the connect-button path tears the task down, because a newly saved
+ * instance URL means the old WebView is now stale and must not survive.
  */
 class OnboardingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,7 +32,9 @@ class OnboardingActivity : AppCompatActivity() {
 
         val settingsMode = intent.action == ACTION_SETTINGS
         if (!settingsMode && Instance.urlOrNull(this) != null) {
-            startMain()
+            // Fast-forward: resume the warm MainActivity task, don't tear it
+            // down (see startMain kdoc).
+            startMain(clearTask = false)
             return
         }
 
@@ -40,7 +48,10 @@ class OnboardingActivity : AppCompatActivity() {
             when (Instance.save(this, urlField.text.toString())) {
                 Instance.SaveResult.OK -> {
                     Instance.configureHotwire(applicationContext)
-                    startMain()
+                    // A URL was just saved (first run or "change server"):
+                    // the old WebView, if any, points at the old server and
+                    // must die, not resume.
+                    startMain(clearTask = true)
                 }
                 Instance.SaveResult.HTTPS_REQUIRED -> showError(errorView, R.string.error_https_required)
                 Instance.SaveResult.INVALID -> showError(errorView, R.string.error_invalid_url)
@@ -65,10 +76,16 @@ class OnboardingActivity : AppCompatActivity() {
         view.visibility = View.VISIBLE
     }
 
-    private fun startMain() {
+    /**
+     * [clearTask] false (fast-forward): a plain intent — MainActivity's
+     * singleTask launchMode brings the existing warm instance to the front
+     * instead of recreating it. [clearTask] true (connect-button path):
+     * the full NEW_TASK|CLEAR_TASK teardown, because switching instances
+     * leaves the old WebView pointed at the old server.
+     */
+    private fun startMain(clearTask: Boolean) {
         startActivity(
-            Intent(this, MainActivity::class.java)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            Intent(this, MainActivity::class.java).addFlags(mainActivityFlags(clearTask))
         )
         finish()
     }
@@ -87,5 +104,20 @@ class OnboardingActivity : AppCompatActivity() {
 
     companion object {
         const val ACTION_SETTINGS = "md.pitom.android.SETTINGS"
+
+        /**
+         * Pure flag decision for [startMain], pulled out so it's
+         * JVM-testable without an Activity or Robolectric. `clearTask =
+         * false` (resume) carries no flags: MainActivity's singleTask
+         * launchMode alone brings the existing instance forward. `clearTask
+         * = true` (replace) carries NEW_TASK|CLEAR_TASK: the prior task,
+         * WebView included, is destroyed rather than resumed.
+         */
+        fun mainActivityFlags(clearTask: Boolean): Int =
+            if (clearTask) {
+                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            } else {
+                0
+            }
     }
 }

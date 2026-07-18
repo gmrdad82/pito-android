@@ -10,8 +10,16 @@ local.properties
 *.jks
 *.keystore
 
-# Scratch
-/tmp/
+# Scratch — the FOLDER is tracked (via .keep) so it exists in fresh clones;
+# its CONTENTS never are. google-services.json and the Firebase
+# service-account key live here locally — secrets treatment, never in git
+# (CI gets google-services.json as a base64 secret instead).
+/tmp/*
+!/tmp/.keep
+
+# Firebase config — app/build.gradle.kts mirrors tmp/google-services.json here
+# locally; CI decodes it from a secret. Never committed either way.
+/app/google-services.json
 
 # Editor
 .idea/

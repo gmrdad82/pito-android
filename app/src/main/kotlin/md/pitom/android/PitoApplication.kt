@@ -1,10 +1,12 @@
 package md.pitom.android
 
 import android.app.Application
+import dev.hotwire.core.bridge.BridgeComponentFactory
 import dev.hotwire.core.config.Hotwire
 import dev.hotwire.core.bridge.KotlinXJsonConverter
 import dev.hotwire.core.turbo.webview.HotwireWebView
 import dev.hotwire.navigation.config.defaultFragmentDestination
+import dev.hotwire.navigation.config.registerBridgeComponents
 import dev.hotwire.navigation.config.registerFragmentDestinations
 import dev.hotwire.navigation.config.registerRouteDecisionHandlers
 import dev.hotwire.navigation.fragments.HotwireWebBottomSheetFragment
@@ -63,6 +65,13 @@ class PitoApplication : Application() {
         // registerRouteDecisionHandlers REPLACES the default router, so the
         // three built-ins are re-listed (see routeDecisionHandlers above).
         Hotwire.registerRouteDecisionHandlers(*routeDecisionHandlers.toTypedArray())
+
+        // "push-registration" is a fixed wire contract with the web's
+        // Stimulus controller of the same component name — see
+        // PushRegistrationComponent's own doc for the message/reply shape.
+        Hotwire.registerBridgeComponents(
+            BridgeComponentFactory(PushRegistrationComponent.NAME, ::PushRegistrationComponent),
+        )
 
         Instance.configureHotwire(this)
     }
