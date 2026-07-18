@@ -51,4 +51,12 @@ class PitoApplicationTest {
             "SystemNavigationRouteDecisionHandler",
         )
     }
+
+    @Test
+    fun `push-registration bridge component is registered under its fixed wire name`() {
+        // The web's Stimulus controller is built against this exact name —
+        // see PushRegistrationComponent's doc.
+        assertThat(Hotwire.config.registeredBridgeComponentFactories.map { it.name })
+            .contains("push-registration")
+    }
 }

@@ -30,6 +30,14 @@ jobs:
       !contains(github.event.head_commit.message, '[skipci]') &&
       !contains(github.event.pull_request.title, '[skipci]')
     runs-on: ubuntu-latest
+    env:
+      # Job-level (not step-level): an `if:` condition can't see the secrets
+      # context directly, so the Firebase step below checks this env var
+      # instead. Empty for forks (they never receive secrets) and for this
+      # repo before the secret is added — either way app/build.gradle.kts
+      # only applies the google-services plugin when app/google-services.json
+      # exists, so the build stays green and simply ships pushless.
+      GOOGLE_SERVICES_JSON_BASE64: ${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
@@ -42,6 +50,10 @@ jobs:
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v6
+
+      - name: Configure Firebase (when the secret is set)
+        if: env.GOOGLE_SERVICES_JSON_BASE64 != ''
+        run: printf '%s' "$GOOGLE_SERVICES_JSON_BASE64" | base64 -d > app/google-services.json
 
       - name: Run unit tests
         run: ./gradlew testDebugUnitTest koverVerifyDebug

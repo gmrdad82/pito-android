@@ -5,6 +5,32 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.serialization")
     id("org.jetbrains.kotlinx.kover") version "0.9.8"
+    id("com.google.gms.google-services") apply false
+}
+
+// Firebase push wiring (build wiring only — no messaging code lands until a
+// later task). Local convenience: mirror the owner's tmp/google-services.json
+// (gitignored, .keep-tracked folder — see .gitignore) into app/google-services.json
+// whenever it's newer, so a fresh checkout builds off the owner's file with no
+// manual copy step. This has to be plain configuration-time code, not a Gradle
+// task: it must finish BEFORE the conditional apply(...) below, which itself
+// runs during configuration — a lazily-executed task would only take effect on
+// the NEXT build. CI writes app/google-services.json itself from a secret (see
+// .github/workflows/*.yml) and never touches tmp/.
+val googleServicesJson = file("google-services.json")
+val ownerGoogleServicesJson = rootProject.file("tmp/google-services.json")
+if (ownerGoogleServicesJson.exists() &&
+    (!googleServicesJson.exists() ||
+        ownerGoogleServicesJson.lastModified() > googleServicesJson.lastModified())
+) {
+    ownerGoogleServicesJson.copyTo(googleServicesJson, overwrite = true)
+}
+
+// The google-services plugin fails the build outright when google-services.json
+// is absent. Forks and a not-yet-configured checkout have no Firebase project,
+// so apply it ONLY when the file exists — those builds simply ship pushless.
+if (googleServicesJson.exists()) {
+    apply(plugin = "com.google.gms.google-services")
 }
 
 // versionCode derives from the release tag: v1.2.3 -> 10203. CI provides
@@ -98,6 +124,15 @@ kover {
                     "md.pitom.android.PitoWebFragment",
                     "md.pitom.android.NeonLogoView*",
                     "md.pitom.android.GlassButton",
+                    // Thin Android/Firebase glue — permission requests, the
+                    // ActivityResultRegistry dance, and FCM's own service
+                    // lifecycle all need a live Activity/Firebase app to
+                    // exercise meaningfully (instrumented-test territory).
+                    // Their actual logic (data -> notification mapping,
+                    // token persistence) is pulled into PushNotifications /
+                    // PendingPushToken, which stay covered.
+                    "md.pitom.android.PushRegistrationComponent*",
+                    "md.pitom.android.PitoMessagingService",
                 )
             }
         }
@@ -119,6 +154,14 @@ dependencies {
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     implementation("com.google.android.material:material:1.12.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
+
+    // Firebase Cloud Messaging client. The BoM pins every Firebase artifact's
+    // version together; declared unconditionally so the app compiles the same
+    // on forks (see the conditional google-services plugin above) — without a
+    // google-services.json, Firebase just stays uninitialized at runtime and
+    // push is a no-op.
+    implementation(platform("com.google.firebase:firebase-bom:34.16.0"))
+    implementation("com.google.firebase:firebase-messaging")
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.robolectric:robolectric:4.16.1")

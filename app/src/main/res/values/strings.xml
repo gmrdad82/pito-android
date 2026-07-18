@@ -9,4 +9,5 @@
     <string name="google_reconnect_title">Google sign-in</string>
     <string name="google_reconnect_message">Google blocks sign-in inside embedded apps. Reconnect from a regular browser on any device — the connection is server-side and the app picks it up right away.</string>
     <string name="shortcut_server">Change Server</string>
+    <string name="notification_channel_name">PITO</string>
 </resources>
