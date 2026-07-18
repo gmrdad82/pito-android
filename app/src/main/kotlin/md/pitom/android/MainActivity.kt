@@ -12,6 +12,14 @@ import dev.hotwire.navigation.navigator.NavigatorConfiguration
 import dev.hotwire.navigation.util.applyDefaultImeWindowInsets
 
 class MainActivity : HotwireActivity() {
+    companion object {
+        // Trims a sliver off the full statusBars inset so the web content's
+        // top chrome sits a bit closer to the clock/battery row instead of
+        // the full inset gap. Taste call, not derived from any spec — the
+        // owner tunes this by eye on device.
+        private const val STATUS_BAR_TRIM_DP = 6
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
@@ -36,7 +44,9 @@ class MainActivity : HotwireActivity() {
         // a needlessly deep strip (owner 2026-07-05).
         val root = findViewById<View>(R.id.main_root)
         ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
-            view.updatePadding(top = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top)
+            val statusBarInset = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
+            val trimPx = (STATUS_BAR_TRIM_DP * view.resources.displayMetrics.density).toInt()
+            view.updatePadding(top = (statusBarInset - trimPx).coerceAtLeast(0))
             insets
         }
         findViewById<View>(R.id.main_nav_host).applyDefaultImeWindowInsets()
