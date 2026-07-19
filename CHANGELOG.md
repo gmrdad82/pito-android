@@ -6,7 +6,16 @@ the project follows [Semantic Versioning](https://semver.org/) — patch for
 fixes and polish, minor for new shell capability, major for anything that
 breaks the shell/server contract.
 
-## [Unreleased]
+## [1.4.0] — 2026-07-19
+
+### Added
+
+- **Notifications wear a real title** — the server's new optional
+  `data.title` (per-source, copy-driven: "Unpublished vids" and friends)
+  feeds `setContentTitle`, read with the same blank-tolerant pattern the
+  body already uses; a payload without one falls back to the app name,
+  so old servers keep working and the bold line above the message is
+  never empty again.
 
 ### Changed
 

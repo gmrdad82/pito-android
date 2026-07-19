@@ -77,4 +77,30 @@ class PushNotificationsTest {
         assertThat(notification.color).isEqualTo(ContextCompat.getColor(context, R.color.pito_blue))
         assertThat(notification.contentIntent).isEqualTo(contentIntent)
     }
+
+    @Test
+    fun `build sets the content title from data when present`() {
+        val notification = PushNotifications.build(
+            context,
+            mapOf("message" to "Your upload finished processing", "title" to "Upload complete"),
+            contentIntent,
+        )
+
+        assertThat(notification).isNotNull()
+        assertThat(notification!!.extras.getCharSequence(android.app.Notification.EXTRA_TITLE).toString())
+            .isEqualTo("Upload complete")
+    }
+
+    @Test
+    fun `build falls back to the app name when data carries no title`() {
+        val notification = PushNotifications.build(
+            context,
+            mapOf("message" to "Your upload finished processing"),
+            contentIntent,
+        )
+
+        assertThat(notification).isNotNull()
+        assertThat(notification!!.extras.getCharSequence(android.app.Notification.EXTRA_TITLE).toString())
+            .isEqualTo("PITO")
+    }
 }

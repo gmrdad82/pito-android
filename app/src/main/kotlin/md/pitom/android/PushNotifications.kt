@@ -10,9 +10,10 @@ import androidx.core.content.ContextCompat
 
 /**
  * The data-payload -> notification mapping for PitoMessagingService. Data-only
- * FCM messages arrive as a plain `Map<String, String>` with keys `message` and
- * `level`; only `message` feeds the notification today (`level` rides along in
- * the payload but has no native styling yet — reserved for the web/server
+ * FCM messages arrive as a plain `Map<String, String>` with keys `message`,
+ * `level`, and an optional `title`; `message` feeds the notification body and
+ * `title` (when present) feeds the notification title — `level` rides along
+ * in the payload but has no native styling yet — reserved for the web/server
  * side, or a future severity treatment here).
  *
  * Pulled out of the Service so the mapping is plain-JVM testable without a
@@ -23,6 +24,7 @@ object PushNotifications {
     const val CHANNEL_ID = "pito"
     const val NOTIFICATION_ID = 1
     private const val DATA_KEY_MESSAGE = "message"
+    private const val DATA_KEY_TITLE = "title"
 
     fun channel(context: Context): NotificationChannel = NotificationChannel(
         CHANNEL_ID,
@@ -34,13 +36,21 @@ object PushNotifications {
     fun contentText(data: Map<String, String>): String? =
         data[DATA_KEY_MESSAGE]?.takeIf { it.isNotBlank() }
 
+    /** Pure extraction: a missing or blank `title` means the caller falls
+     *  back to the app name — the server omits `title` entirely when a
+     *  notification has none. */
+    fun contentTitle(data: Map<String, String>): String? =
+        data[DATA_KEY_TITLE]?.takeIf { it.isNotBlank() }
+
     /** Null when the payload carries no usable `message` — the caller posts
      *  nothing in that case. */
     fun build(context: Context, data: Map<String, String>, contentIntent: PendingIntent): Notification? {
         val text = contentText(data) ?: return null
+        val title = contentTitle(data) ?: context.getString(R.string.app_name)
         return NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification)
             .setColor(ContextCompat.getColor(context, R.color.pito_blue))
+            .setContentTitle(title)
             .setContentText(text)
             .setContentIntent(contentIntent)
             .setAutoCancel(true)
