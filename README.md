@@ -1,26 +1,24 @@
-# PITO Android
+# Pito Android
 
 [![CI](https://github.com/gmrdad82/pito-android/actions/workflows/build.yml/badge.svg)](https://github.com/gmrdad82/pito-android/actions/workflows/build.yml)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Sponsor](https://img.shields.io/badge/Sponsor-%E2%9D%A4-ff69b4?logo=githubsponsors)](https://github.com/sponsors/gmrdad82)
 
-Android client for [PITO](https://github.com/gmrdad82/pito) — the self-hosted,
+Android client for [Pito](https://github.com/gmrdad82/pito) — the self-hosted,
 chat-first YouTube channel manager. This app is a thin
-[Hotwire Native](https://native.hotwired.dev) shell: it renders your PITO
+[Hotwire Native](https://native.hotwired.dev) shell: it renders your Pito
 instance's own server-rendered UI full-screen with native navigation. No UI is
 reimplemented here; your server is the product, this is the window. That's
 also why the app is this small — and why it can never lag behind the web app.
 
-**The app is instance-agnostic.** PITO is self-hostable, and so is this
+**The app is instance-agnostic.** Pito is self-hostable, and so is this
 client: on first launch you enter the URL of *your* instance — a box in your
 closet, a VPS, or a hosted instance such as `app.pitomd.com`. No backend is
 baked in. Your server, your data, your phone.
 
-More of a terminal person? PITO also speaks ANSI:
-[**pito-tui**](https://github.com/gmrdad82/pito-tui) is the same chatbox —
-same server-side grammar, same live scrollback — living in your terminal.
-And for the full tour before you commit to anything, the showcase lives at
-[**pitomd.com**](https://pitomd.com) ([source](https://github.com/gmrdad82/pitomd)).
+For the full tour of the free Pito chat before you commit to anything, the
+showcase lives at [**pitomd.com**](https://pitomd.com)
+([source](https://github.com/gmrdad82/pitomd)).
 
 ## Install
 
@@ -34,15 +32,15 @@ On your phone, open:
 
 Open the downloaded file with **Package installer**. The first time, Android
 asks you to allow your browser to install unknown apps — that's the normal
-sideload flow, and the only permission this ever needs. (If PITO's web app
+sideload flow, and the only permission this ever needs. (If Pito's web app
 already knows you're on Android, it shows you this same link as a banner.)
 
 ### Requirements
 
 - Android 9 (API 28) or newer.
-- A PITO instance served over **HTTPS** — plain-HTTP instances are not
+- A Pito instance served over **HTTPS** — plain-HTTP instances are not
   supported. Self-hosting on a LAN? Put TLS in front (a reverse proxy or the
-  tunnel the pito installer sets up).
+  tunnel the Pito installer sets up).
 
 ### Updates
 
@@ -94,7 +92,7 @@ the signing key matches, so sideload only release-signed APKs.
 
 ## License
 
-[AGPL-3.0](LICENSE), same as PITO.
+[AGPL-3.0](LICENSE), same as Pito.
 
 ---
 

@@ -1,12 +1,12 @@
 # pito-android — project guide (for Claude / agents)
 
 Agent guide for **pito-android** — the Hotwire Native (Kotlin) Android shell
-for [PITO](https://github.com/gmrdad82/pito), distributed as a signed APK via
+for [Pito](https://github.com/gmrdad82/pito), distributed as a signed APK via
 GitHub Releases (no Play Store).
 
 > The global working agreement (`~/.claude/CLAUDE.md`) applies here; this
 > file carries only pito-android specifics. This repo is deliberately small —
-> a thin shell, not a product of its own. Deeper PITO product architecture
+> a thin shell, not a product of its own. Deeper Pito product architecture
 > lives in the `pito` repo (`docs/architecture.md`, `docs/design.md` for the
 > visual tokens this shell's theme tracks); this repo's own `README.md`
 > covers install/build/connect — read the relevant one before writing code,
@@ -40,7 +40,7 @@ GitHub Releases (no Play Store).
 
 # pito-android architecture (map + invariants)
 
-A **thin shell**. It renders any PITO instance's server-rendered
+A **thin shell**. It renders any Pito instance's server-rendered
 Turbo/Stimulus UI in a WebView with native navigation, a native instance
 picker, and Custom Tabs for external links. The Rails app is the product —
 **never rebuild web UI natively**, never add native features the web side
