@@ -4,9 +4,12 @@ All notable changes to the Pito Android app are documented here. The format
 follows [Keep a Changelog](https://keepachangelog.com/); from 1.0.0 onward
 the project follows [Semantic Versioning](https://semver.org/) — patch for
 fixes and polish, minor for new shell capability, major for anything that
-breaks the shell/server contract.
+breaks the shell/server contract. The jump from 1.4.0 to 5.0.0 is not five
+majors of change: the version numbers across the Pito repos are aligned at
+5.0.0 so a given release of one names the release of the others it was
+built against.
 
-## [1.5.0] — 2026-07-27
+## [5.0.0] — 2026-07-27
 
 **Final freeze.** This repo's focus narrows elsewhere for now; this release
 freezes the Android shell in good shape. Nothing about the shell/server
