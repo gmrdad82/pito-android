@@ -51,7 +51,7 @@ class PushNotificationsTest {
     fun `channel carries the fixed pito id and default importance`() {
         val channel = PushNotifications.channel(context)
         assertThat(channel.id).isEqualTo("pito")
-        assertThat(channel.name).isEqualTo("PITO")
+        assertThat(channel.name).isEqualTo("Pito")
         assertThat(channel.importance).isEqualTo(NotificationManager.IMPORTANCE_DEFAULT)
     }
 
@@ -101,6 +101,6 @@ class PushNotificationsTest {
 
         assertThat(notification).isNotNull()
         assertThat(notification!!.extras.getCharSequence(android.app.Notification.EXTRA_TITLE).toString())
-            .isEqualTo("PITO")
+            .isEqualTo("Pito")
     }
 }

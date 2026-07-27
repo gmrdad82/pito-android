@@ -108,7 +108,7 @@ android {
     }
 }
 
-// Coverage gate (parity with pito's SimpleCov / pito-tui's go test floor):
+// Coverage gate (parity with pito's SimpleCov / the terminal client's go test floor):
 // koverVerifyDebug fails the build when line coverage of the JVM-testable
 // code drops below the floor. Android lifecycle glue (Activities, custom
 // Views, the fragment) is exercised by the instrumented suite, which doesn't

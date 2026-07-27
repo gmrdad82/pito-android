@@ -1,10 +1,30 @@
 # Changelog
 
-All notable changes to the PITO Android app are documented here. The format
+All notable changes to the Pito Android app are documented here. The format
 follows [Keep a Changelog](https://keepachangelog.com/); from 1.0.0 onward
 the project follows [Semantic Versioning](https://semver.org/) — patch for
 fixes and polish, minor for new shell capability, major for anything that
 breaks the shell/server contract.
+
+## [1.5.0] — 2026-07-27
+
+**Final freeze.** This repo's focus narrows elsewhere for now; this release
+freezes the Android shell in good shape. Nothing about the shell/server
+contract changes — the app still pairs with the free Pito chat, unmodified.
+
+### Changed
+
+- **The product is written "Pito" now** — one capital, the way you would
+  say it, everywhere it appears as a name. That includes the two places you
+  actually read it on the phone: the **launcher label** under the icon and
+  the **notification channel** in Android's settings, both of which used to
+  shout `PITO`. The lowercase `pito` stays put wherever it is a technical
+  identifier: the package id, the paths, the hostnames, the commands — and
+  so does the `PITO;` User-Agent prefix, which the server matches on and
+  which is not a word anyone reads.
+- **README no longer points at the terminal client's repo.** That project
+  is being frozen too and is no longer promoted here; the only pointer left
+  is the free chat showcase at pitomd.com.
 
 ## [1.4.0] — 2026-07-19
 
@@ -67,7 +87,7 @@ breaks the shell/server contract.
 - **Pull-down does nothing now** — the native swipe-to-refresh (a cold-boot
   reload that unloaded the document into a dead black frame) is disabled
   outright: no spinner, no reload, inert glass. The chat's one refresh
-  gesture is PITO's own bottom pull-up, exactly as on the web; the error
+  gesture is Pito's own bottom pull-up, exactly as on the web; the error
   screen's pull keeps the real reload (that document is already gone), and
   the neon logo remains what it was always meant to be: app-boot chrome.
 
@@ -100,7 +120,7 @@ First round of real-device feedback, fixed.
   conversation every launch). Same-origin only; switching servers resets it.
 - **Coverage gate** — Kover verifies the JVM-testable logic layer stays
   above 80% line coverage (89.8% at adoption) on every CI run, the same
-  guardrail pito (SimpleCov) and pito-tui (go test) carry.
+  guardrail pito (SimpleCov) and the terminal client (go test) carry.
 
 ### Fixed
 
@@ -114,13 +134,13 @@ First round of real-device feedback, fixed.
 ## [1.0.0] — 2026-07-04
 
 The first release: a thin [Hotwire Native](https://native.hotwired.dev)
-shell that renders any PITO instance full-screen with native navigation.
+shell that renders any Pito instance full-screen with native navigation.
 Sideloaded APK, no Play Store.
 
 ### Added
 
 - **Instance-agnostic onboarding** — the app ships with NO backend baked in:
-  a first-launch screen (block-art PITO logo with the web start screen's
+  a first-launch screen (block-art Pito logo with the web start screen's
   broken-neon reveal, DejaVu Sans Mono, glass connect button) asks for YOUR
   instance URL and keeps it in app storage. Change it any time via the
   launcher long-press → **Change Server**. HTTPS only.
