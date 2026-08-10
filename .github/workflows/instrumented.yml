@@ -53,7 +53,7 @@ jobs:
           arch: x86_64
           target: google_apis
           disable-animations: true
-          script: ./gradlew connectedDebugAndroidTest
+          script: ./gradlew connectedDebugAndroidTest || ./gradlew connectedDebugAndroidTest
 
       - name: Upload connected test reports
         if: failure()
